@@ -17,6 +17,15 @@ namespace MauiAppTempoAgora
         {
             try
             {
+
+                var conexao = Connectivity.NetworkAccess;
+                if (conexao != NetworkAccess.Internet)
+                {
+                    await DisplayAlert("Sem conexão", "Verifique sua conexão com a internet e tente novamente.", "OK");
+                    return;
+                }
+
+
                 if (!string.IsNullOrEmpty(txt_cidade.Text))
                 {
                     Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
@@ -30,7 +39,11 @@ namespace MauiAppTempoAgora
                                          $"Nascer do Sol: {t.sunrise} \n" +
                                          $"Por do Sol: {t.sunset} \n" +
                                          $"Temp Máx: {t.temp_max} \n" +
-                                         $"Temp Min: {t.temp_min} \n";
+                                         $"Temp Min: {t.temp_min} \n" +
+                                         $"Velocidade do vento: {t.speed} \n" +
+                                         $"Descrição do clima: {t.description} \n" +
+                                         $"Visibilidade: {t.visibility} \n"
+                                         ;
 
                         lbl_res.Text = dados_previsao;
 
@@ -39,6 +52,7 @@ namespace MauiAppTempoAgora
                     {
 
                         lbl_res.Text = "Sem dados de Previsão";
+                        await DisplayAlert("Cidade não encontrada", "Não foi possível localizar a cidade informada. Verifique o nome e tente novamente.", "OK");
                     }
 
                 }
